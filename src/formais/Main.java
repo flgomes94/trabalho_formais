@@ -131,42 +131,116 @@ public class Main {
 			
 		}
 		
+		//for (Map.Entry<Transicao, Integer> meumapa : transicoes_a1.entrySet()) {
+		//	System.out.println(meumapa.getKey()+" "+meumapa.getValue());
+		//}
 		
-		for(Integer estado_1: estados_1) {
-			for(Integer estado_2: estados_2) {
-				Set<Automato> aux=new HashSet<Automato>();
-				for(String letra : sigma) {
-					Transicao t1 = new Transicao(estado_1, letra);
-					Transicao t2 = new Transicao(estado_2, letra);
+		
+		for(String letra: sigma) {
+			for(Integer estado_1: estados_1) {
+				for(Integer estado_2 : estados_2) {
+					Set<Integer> estado_atual = new HashSet<Integer>();
+					Set<Integer> estado_transicao = new HashSet<Integer>();
+					Automato automato= new Automato(null,null, estado_atual,estado_transicao);
+					//System.out.println(estado_1 + " haha "+estado_2 + " haha "+ letra);
+					//Transicao t1 = new Transicao(estado_1, letra);
+					//Transicao t2 = new Transicao(estado_2, letra);
+					automato.estados_iniciais.add(estado_1);
+					automato.estados_iniciais.add(estado_2);
 					
-					//System.out.println(t1);
-					//System.out.println(t2);
-					System.out.println(estado_1.toString() + " haha "+ estado_2.toString());
-					Set<Integer> estados = new HashSet<Integer>();
-					if(estado_1==0 && estado_2==0) {		//é pq é inicial
-						estados.add(transicoes_a1.get(t1));
-						estados.add(transicoes_a2.get(t2));
-						Automato a = new Automato(true,false,estados);
-						aux.add(a);
+					if(estado_1==0 && estado_2==0) {					//é pq é inicial
+						automato.eh_inicial=true;
+						automato.eh_final=false;
+						
+						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a1.entrySet()) {
+							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
+							int x = meumapa.getKey().estado_atual;
+							int y = estado_1;
+							String a = meumapa.getKey().transicao;
+							String b = letra;
+							if((x==y) && a.equals(b)) {
+								//System.out.println("entrei");
+								automato.transicoes.add(meumapa.getValue());
+								break;
+							}
+						}
+						
+						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a2.entrySet()) {
+							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
+							int x = meumapa.getKey().estado_atual;
+							int y = estado_1;
+							String a = meumapa.getKey().transicao;
+							String b = letra;
+							if((x==y) && a.equals(b)) {
+								//System.out.println("entrei");
+								automato.transicoes.add(meumapa.getValue());
+								break;
+							}
+						}
+						
 					}else if(estado_final_1.contains(estado_1) || estado_final_2.contains(estado_2)){
-						estados.add(transicoes_a1.get(t1));
-						estados.add(transicoes_a2.get(t2));
-						Automato a = new Automato(false,true,estados);
-						aux.add(a);
+						automato.eh_inicial=false;
+						automato.eh_final=true;
+						
+						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a1.entrySet()) {
+							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
+							int x = meumapa.getKey().estado_atual;
+							int y = estado_1;
+							String a = meumapa.getKey().transicao;
+							String b = letra;
+							if(x==y && a==b) {
+								//System.out.println("entrei");
+								automato.transicoes.add(meumapa.getValue());
+								break;
+							}
+						}
+						
+						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a2.entrySet()) {
+							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
+							int x = meumapa.getKey().estado_atual;
+							int y = estado_1;
+							String a = meumapa.getKey().transicao;
+							String b = letra;
+							if((x==y) && a.equals(b)) {
+								//System.out.println("entrei");
+								automato.transicoes.add(meumapa.getValue());
+								break;
+							}
+						}
 					}
 					else {
-						estados.add(transicoes_a1.get(t1));
-						estados.add(transicoes_a2.get(t2));
-						Automato a = new Automato(false,false,estados);
-						aux.add(a);
+						automato.eh_inicial=false;
+						automato.eh_final=false;
+						
+						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a1.entrySet()) {
+							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
+							int x = meumapa.getKey().estado_atual;
+							int y = estado_1;
+							String a = meumapa.getKey().transicao;
+							String b = letra;
+							if((x==y) && a.equals(b)) {
+								//System.out.println("entrei");
+								automato.transicoes.add(meumapa.getValue());
+								break;
+							}
+						}
+						
+						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a2.entrySet()) {
+							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
+							int x = meumapa.getKey().estado_atual;
+							int y = estado_1;
+							String a = meumapa.getKey().transicao;
+							String b = letra;
+							if((x==y) && a.equals(b)) {
+								//System.out.println("entrei");
+								automato.transicoes.add(meumapa.getValue());
+								break;
+							}
+						}
+						
 					}
+					uniao.add(automato);
 				}
-				for(Automato a: aux) {
-					Automato novo = new Automato(a.eh_inicial, a.eh_final, a.getEstados());
-					novo.appendEstados(a.getEstados());
-					uniao.add(novo);
-				}
-				//uniao.add(a);
 			}
 		}
 		
