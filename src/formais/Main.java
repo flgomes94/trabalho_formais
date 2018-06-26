@@ -1,32 +1,98 @@
 package formais;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 public class Main {
+	
+	public static void escritor(String path, String text) throws IOException {
+        BufferedWriter buffWrite = new BufferedWriter(new FileWriter(path));
+        buffWrite.append(text + "\n");
+        buffWrite.close();
+    }
+	
+	
+	public static Automato ler(Automato automato) {
+		int qtd_t_1=0,qtd_finais_1=0;
+		BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
+		automato.estados = new HashSet<Integer>();
+		automato.estados_finais = new HashSet<Integer>();
+		automato.transicoes = new ArrayList<Transicao>();
+		
+		System.out.println("Informe a quantidade de transições do automato: ");
+		try {
+			qtd_t_1 = Integer.parseInt(entrada.readLine());
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Informe as transicoes no formato 0 a 1 (leva do estado 0, lendo a para o estado 1): ");
+		for (int i = 0; i <  qtd_t_1; i++) {
+			String transicao=null;
+			try {
+				transicao = entrada.readLine().toString();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			int estado_atual = Integer.parseInt(transicao.split(" ")[0]);
+			String trans = transicao.split(" ")[1];
+			int estado_final = Integer.parseInt(transicao.split(" ")[2]);
+			
+			if (estado_atual == 0)
+				automato.estado_inicial = estado_atual;
+			
+			
+			automato.estados.add(estado_atual);
+			automato.estados.add(estado_final);		
+			Transicao delta = new Transicao(estado_atual, trans, estado_final);
+			automato.transicoes.add(delta);
+			
+		}
+		
+		System.out.println("Informe a quantidade de estados finais do automato : ");
+		try {
+			qtd_finais_1 = Integer.parseInt(entrada.readLine());
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Informe os estados finais do automato : ");
+		for (int i = 0; i < qtd_finais_1; i++) {
+			int estado_final = 0;
+			try {
+				estado_final = Integer.parseInt(entrada.readLine());
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
+			automato.estados_finais.add(estado_final);
+			
+		}
+		
+		return automato;
+		
+	}
+	
+	
 	public static void main(String[] args) {
-		int qtd_t_1=0,qtd_t_2=0,qtd_finais_1=0,qtd_finais_2=0;
-		Set<String> sigma = new HashSet<String>();
-		Set<Integer> estado_final_1 = new HashSet<Integer>();
-		Set<Integer> estado_final_2 = new HashSet<Integer>();
-		Set<Integer> estados_1 = new HashSet<Integer>();
-		Set<Integer> estados_2 = new HashSet<Integer>();
-		
-		Set<Automato> uniao = new HashSet<Automato>();
-		Map<Transicao,Integer> transicoes_a1 = new HashMap<Transicao,Integer>();
-		Map<Transicao,Integer> transicoes_a2 = new HashMap<Transicao,Integer>();
-		
+	
+		Set<String> sigma = new HashSet<String>();		
 		
 		BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
 		
 		
-		System.out.print("Informe o alfabeto dos autômatos (separados por espaço e ao fim pressione enter): ");
+		System.out.println("Informe o alfabeto dos autômatos (separados por espaço e ao fim pressione enter): ");
 		try {
 			String alfabeto = entrada.readLine().toString();
 			String[] caracteres = alfabeto.split(" ");
@@ -37,217 +103,94 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		System.out.print("Informe a quantidade de transições do automato 1: ");
-		try {
-			qtd_t_1 = Integer.parseInt(entrada.readLine());
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.print("Informe as transicoes no formado 0 a 1 (leva do estado 0, lendo a para o estado 1): ");
-		for (int i = 0; i < qtd_t_1; i++) {
-			String transicao=null;
-			try {
-				transicao = entrada.readLine().toString();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			int estado_atual = Integer.parseInt(transicao.split(" ")[0]);
-			estados_1.add(estado_atual);
-			String trans = transicao.split(" ")[1];
-			int estado_final = Integer.parseInt(transicao.split(" ")[2]);
-			Transicao t = new Transicao(estado_atual, trans);
-			transicoes_a1.put(t, estado_final);
-			
-		}
+		Automato automato1 = new Automato();
+		automato1 = ler(automato1);
 		
-		System.out.print("Informe a quantidade de estados finais do automato 1: ");
-		try {
-			qtd_finais_1 = Integer.parseInt(entrada.readLine());
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		for (int i = 0; i < qtd_finais_1; i++) {
-			int estado_final = 0;
-			try {
-				estado_final = Integer.parseInt(entrada.readLine());
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			estado_final_1.add(estado_final);
-			
-		}
-		
-		//fim1
-		
-		System.out.print("Informe a quantidade de transições do automato 2: ");
-		try {
-			qtd_t_2 = Integer.parseInt(entrada.readLine());
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.print("Informe as transicoes no formado 0 a 1 (leva do estado 0, lendo a para o estado 1): ");
-		for (int i = 0; i < qtd_t_2; i++) {
-			String transicao=null;
-			try {
-				transicao = entrada.readLine().toString();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			int estado_atual = Integer.parseInt(transicao.split(" ")[0]);
-			estados_2.add(estado_atual);
-			String trans = transicao.split(" ")[1];
-			int estado_final = Integer.parseInt(transicao.split(" ")[2]);
-			Transicao t = new Transicao(estado_atual, trans);
-			transicoes_a2.put(t, estado_final);
-			
-		}
-		
-		System.out.print("Informe a quantidade de estados finais do automato 2: ");
-		try {
-			qtd_finais_2 = Integer.parseInt(entrada.readLine());
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		for (int i = 0; i < qtd_finais_2; i++) {
-			int estado_final = 0;
-			try {
-				estado_final = Integer.parseInt(entrada.readLine());
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			estado_final_2.add(estado_final);
-			
-		}
+		Automato automato2 = new Automato();
+		automato2 = ler(automato2);
 		
 		//for (Map.Entry<Transicao, Integer> meumapa : transicoes_a1.entrySet()) {
 		//	System.out.println(meumapa.getKey()+" "+meumapa.getValue());
 		//}
 		
+		AutomatoDaUniao automatos_unidos = new AutomatoDaUniao(sigma);
+		automatos_unidos.estados = new HashSet<Par>();
+		automatos_unidos.estados_finais = new HashSet<Par>();
+		automatos_unidos.transicoes = new HashSet<Transicoes>();
 		
-		for(String letra: sigma) {
-			for(Integer estado_1: estados_1) {
-				for(Integer estado_2 : estados_2) {
-					Set<Integer> estado_atual = new HashSet<Integer>();
-					Set<Integer> estado_transicao = new HashSet<Integer>();
-					Automato automato= new Automato(null,null, estado_atual,estado_transicao);
-					//System.out.println(estado_1 + " haha "+estado_2 + " haha "+ letra);
-					//Transicao t1 = new Transicao(estado_1, letra);
-					//Transicao t2 = new Transicao(estado_2, letra);
-					automato.estados_iniciais.add(estado_1);
-					automato.estados_iniciais.add(estado_2);
-					
-					if(estado_1==0 && estado_2==0) {					//é pq é inicial
-						automato.eh_inicial=true;
-						automato.eh_final=false;
-						
-						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a1.entrySet()) {
-							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
-							int x = meumapa.getKey().estado_atual;
-							int y = estado_1;
-							String a = meumapa.getKey().transicao;
-							String b = letra;
-							if((x==y) && a.equals(b)) {
-								//System.out.println("entrei");
-								automato.transicoes.add(meumapa.getValue());
-								break;
-							}
-						}
-						
-						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a2.entrySet()) {
-							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
-							int x = meumapa.getKey().estado_atual;
-							int y = estado_1;
-							String a = meumapa.getKey().transicao;
-							String b = letra;
-							if((x==y) && a.equals(b)) {
-								//System.out.println("entrei");
-								automato.transicoes.add(meumapa.getValue());
-								break;
-							}
-						}
-						
-					}else if(estado_final_1.contains(estado_1) || estado_final_2.contains(estado_2)){
-						automato.eh_inicial=false;
-						automato.eh_final=true;
-						
-						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a1.entrySet()) {
-							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
-							int x = meumapa.getKey().estado_atual;
-							int y = estado_1;
-							String a = meumapa.getKey().transicao;
-							String b = letra;
-							if(x==y && a==b) {
-								//System.out.println("entrei");
-								automato.transicoes.add(meumapa.getValue());
-								break;
-							}
-						}
-						
-						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a2.entrySet()) {
-							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
-							int x = meumapa.getKey().estado_atual;
-							int y = estado_1;
-							String a = meumapa.getKey().transicao;
-							String b = letra;
-							if((x==y) && a.equals(b)) {
-								//System.out.println("entrei");
-								automato.transicoes.add(meumapa.getValue());
-								break;
-							}
-						}
-					}
-					else {
-						automato.eh_inicial=false;
-						automato.eh_final=false;
-						
-						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a1.entrySet()) {
-							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
-							int x = meumapa.getKey().estado_atual;
-							int y = estado_1;
-							String a = meumapa.getKey().transicao;
-							String b = letra;
-							if((x==y) && a.equals(b)) {
-								//System.out.println("entrei");
-								automato.transicoes.add(meumapa.getValue());
-								break;
-							}
-						}
-						
-						for (Map.Entry<Transicao, Integer> meumapa : transicoes_a2.entrySet()) {
-							//System.out.println(meumapa.getKey().estado_atual + " "+ meumapa.getKey().transicao + estado_1 + " " + letra);
-							int x = meumapa.getKey().estado_atual;
-							int y = estado_1;
-							String a = meumapa.getKey().transicao;
-							String b = letra;
-							if((x==y) && a.equals(b)) {
-								//System.out.println("entrei");
-								automato.transicoes.add(meumapa.getValue());
-								break;
-							}
-						}
-						
-					}
-					uniao.add(automato);
+		
+		for (Transicao transicao1: automato1.transicoes) {
+			for (Transicao transicao2: automato2.transicoes) {
+				String lendo = "";
+				Par par = new Par(transicao1.de, transicao2.de);
+				Par novo = new Par(transicao1.para, transicao2.para);	
+				
+				if (transicao1.de == 0 && transicao2.de == 0)
+					automatos_unidos.estado_inicial = par;
+				
+				if (automato1.estados_finais.contains(transicao1.de) || automato2.estados_finais.contains(transicao2.de))
+					automatos_unidos.estados_finais.add(par);
+				
+				if (transicao1.lendo.equals(transicao2.lendo)) {
+					automatos_unidos.estados.add(par);
+					automatos_unidos.estados.add(novo);
+					lendo = transicao1.lendo;
+					Transicoes delta = new Transicoes(par, lendo, novo);
+					automatos_unidos.transicoes.add(delta);
+				} else {
+					continue;
 				}
 			}
 		}
-		
-		for(Automato um: uniao) {
-			System.out.println(um);
+			
+		String arquivo_jflap = "<?xml version='1.0' encoding='UTF-8' standalone='no'?>\n <structure>&#13;\n\t<type>fa</type>&#13;\n \t<automaton>&#13;\n		<!--The list of states.-->\n";
+		int cont = 0;
+		for (Par par: automatos_unidos.estados) {
+			
+			arquivo_jflap += "\t\t<state id=\"" + par.key + par.value + "\" name=\"q"+cont+"\">&#13;\n";
+			float conta, conta2;
+			if (cont%2 == 0) {
+				 conta = (float)231+50*(cont);
+				 conta2 = (float)132 + 20*cont;
+			}else {
+				conta = (float)231+50*(cont+1);
+				conta2 = (float)132 + 24*cont;
+			}
+			arquivo_jflap += "\t\t\t<x>"+ conta +"</x>&#13;\n";
+			arquivo_jflap += "\t\t\t<y>" +conta2+ "</y>&#13;\n";
+			
+			
+			if (par.equals(automatos_unidos.estado_inicial)){
+				arquivo_jflap += "\t\t\t<initial/>&#13;\n";
+			}
+			
+			if(automatos_unidos.estados_finais.contains(par)){
+				arquivo_jflap += "\t\t\t<final/>&#13;\n";
+			}
+			
+			arquivo_jflap += "\t\t</state>&#13;\n";	
+			cont++;
 		}
 		
+		for (Transicoes delta: automatos_unidos.transicoes) {
+			Par from = delta.de;
+			Par to = delta.para;
+			String read = delta.lendo;
+				
+			arquivo_jflap += "\t\t<transition>&#13;\n";
+			arquivo_jflap += "\t\t\t<from>"+from.key + from.value +"</from>&#13;\n";
+			arquivo_jflap += "\t\t\t<to>"+ to.key + to.value +"</to>&#13;\n";
+			arquivo_jflap += "\t\t\t<read>"+read+"</read>&#13;\n";
+			arquivo_jflap += "\t\t</transition>&#13;\n";
+		}
+		
+		arquivo_jflap += "\t</automaton>&#13;\n";
+		arquivo_jflap += "</structure>";
+		try {
+			escritor("uniao.jff", arquivo_jflap);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Arquivo uniao.jff gerado!");
 	}
-	
 }
