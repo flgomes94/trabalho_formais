@@ -1,7 +1,7 @@
 package formais;
 
 public class Transicao implements Comparable<Transicao> {
-
+	//auxiliar para gerar comparação entre duas transições
 	int de;
 	String lendo;
 	int para;

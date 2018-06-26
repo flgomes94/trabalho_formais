@@ -10,14 +10,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
-	
+	/*Função que escreve texto no arquivo*/
 	public static void escritor(String path, String text) throws IOException {
         BufferedWriter buffWrite = new BufferedWriter(new FileWriter(path));
         buffWrite.append(text + "\n");
         buffWrite.close();
     }
 	
-	
+	/*Função de auxílio de leitura de autômato. Lê todas as informações
+	 * da entrada e armazena em um objeto do tipo Automato 
+	 * */
 	public static Automato ler(Automato automato) {
 		int qtd_t_1=0,qtd_finais_1=0;
 		BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
@@ -86,7 +88,12 @@ public class Main {
 	
 	
 	public static void main(String[] args) {
-	
+		/*Função principal. Le alfabeto, gera os automatos separados
+		 * depois une de acordo o livro
+		 * no caso, pega todos os pares de cada autômato, e ai:
+		 * Se ambos forem um estado inicial, aquele será um estado inicial
+		 * Se algum dos dois forem um estado final, aquele será um estado final.
+		 * Por fim, a última função gera o arquivo final para leitura do JFLAP.*/
 		Set<String> sigma = new HashSet<String>();		
 		
 		BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));

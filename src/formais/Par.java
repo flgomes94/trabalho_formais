@@ -1,5 +1,5 @@
 package formais;
-
+//estrutura similar a pair. 
 public class Par{
 	int key;
 	int value;
