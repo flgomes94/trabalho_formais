@@ -9,5 +9,6 @@ public class Automato {
 	Set<Integer> estados;
 	List<Transicao> transicoes;
 	Set<Integer> estados_finais;
-	Integer estado_inicial;	
+	Integer estado_inicial;
+	int qtd_alfabeto;
 }

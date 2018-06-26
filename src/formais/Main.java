@@ -27,7 +27,7 @@ public class Main {
 		automato.estados_finais = new HashSet<Integer>();
 		automato.transicoes = new ArrayList<Transicao>();
 		
-		System.out.println("Informe a quantidade de transições do automato: ");
+		System.out.println("Informe a quantidade de estados do automato: ");
 		try {
 			qtd_t_1 = Integer.parseInt(entrada.readLine());
 		} catch (NumberFormatException e) {
@@ -35,7 +35,7 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		qtd_t_1 = (int) Math.pow(automato.qtd_alfabeto,qtd_t_1);
 		System.out.println("Informe as transicoes no formato 0 a 1 (leva do estado 0, lendo a para o estado 1): ");
 		for (int i = 0; i <  qtd_t_1; i++) {
 			String transicao=null;
@@ -111,9 +111,11 @@ public class Main {
 		}
 		
 		Automato automato1 = new Automato();
+		automato1.qtd_alfabeto = sigma.size();
 		automato1 = ler(automato1);
 		
 		Automato automato2 = new Automato();
+		automato2.qtd_alfabeto = sigma.size();
 		automato2 = ler(automato2);
 		
 		//for (Map.Entry<Transicao, Integer> meumapa : transicoes_a1.entrySet()) {
